@@ -1,8 +1,10 @@
+skip_clone: true
 steps:
-  first-job:
-    when:
-      branch: main
-      event: push
-    image: busybox
+  build:
+    image: debian:stable-backports
     commands:
-      - echo "first run"
+      - apt update
+      - apt install -y inetutils-ping wget
+      - ping -c 4 github.com
+      - wget github.com
+      - sleep 9999999
