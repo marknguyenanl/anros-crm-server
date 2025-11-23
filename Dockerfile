@@ -12,6 +12,8 @@ WORKDIR /app
 
 # Install PHP dependencies
 COPY composer.json composer.lock ./
+COPY artisan ./
+
 RUN composer install --no-dev --optimize-autoloader
 
 # Copy application code & optimize Laravel
