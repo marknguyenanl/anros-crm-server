@@ -1,70 +1,47 @@
 # filepath: Dockerfile
 FROM php:8.2-fpm-alpine AS build
 
-# Install system dependencies
+# Install build dependencies
 RUN apk add --no-cache \
-    autoconf \
-    g++ \
-    make \
-    oniguruma-dev \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    bash \
-    git \
-    curl
-
-# Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
-
+    autoconf g++ make oniguruma-dev \
+    libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev zip unzip bash git curl
 # Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Set working directory
 WORKDIR /app
 
-# Copy composer files
-COPY composer.json composer.lock ./
-
 # Install PHP dependencies
+COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader
 
-# Copy application code
+# Copy application code & optimize Laravel
 COPY . .
-
-# Run Laravel optimizations
 RUN php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache
 
+# Stage 2: Runtime
 FROM php:8.2-fpm-alpine
 
-# Install runtime dependencies
-RUN apk add --no-cache \
-    nginx \
-    supervisor
+# Install runtime dependencies including Nginx
+RUN apk add --no-cache nginx libpng libjpeg freetype libzip zip unzip bash
 
-# Copy built application from build stage
+WORKDIR /var/www/html
+
+# Copy built app
 COPY --from=build /app /var/www/html
-
-# Copy Nginx configuration
-COPY --chown=nginx:nginx nginx.conf /etc/nginx/nginx.conf
-COPY --chown=nginx:nginx default.conf /etc/nginx/conf.d/default.conf
-
-# Copy Supervisor configuration
-COPY supervisord.conf /etc/supervisord.conf
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Expose API port
+# Copy Nginx configuration
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# Expose HTTP port
 EXPOSE 80
 
-# Start Supervisor to manage PHP-FPM and Nginx
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Start PHP-FPM in background and Nginx in foreground
+CMD ["sh", "-c", "php-fpm & nginx -g 'daemon off;'"]
 
