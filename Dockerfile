@@ -14,36 +14,21 @@ RUN composer install --no-dev --optimize-autoloader \
     && php artisan route:cache \
     && php artisan view:cache
 
-# Stage 2: Runtime
-FROM php:8.2-fpm-alpine
-
-WORKDIR /var/www/html
-
+# Stage 2: Runtime Nginx + PHP-FPM
+FROM nginx:alpine
+# Install PHP-FPM and extensions
 RUN apk add --no-cache \
-    bash \
-    libpng libpng-dev \
-    libjpeg-turbo libjpeg-turbo-dev \
-    freetype freetype-dev \
-    libzip libzip-dev \
-    zlib-dev \
-    mariadb-connector-c-dev \
-    oniguruma-dev \
-    && docker-php-ext-configure gd \
-    --with-freetype=/usr/include/ \
-    --with-jpeg=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql zip \
-    && apk del libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev zlib-dev mariadb-connector-c-dev
+    php8 php8-fpm php8-opcache php8-gd php8-pdo php8-pdo_mysql php8-mbstring php8-zip bash \
+    libpng libjpeg-turbo freetype
 
-
-# Copy optimized app from build stage
+# Copy Laravel app
 COPY --from=build /app /var/www/html
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+# Copy Nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 9000
+# Expose HTTP (Gateway handles TLS)
+EXPOSE 80
 
-CMD ["php-fpm"]
-
+# Start PHP-FPM and Nginx
+CMD sh -c "php-fpm8 -F & nginx -g 'daemon off;'"
