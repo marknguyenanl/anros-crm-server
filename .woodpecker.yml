@@ -8,13 +8,11 @@ steps:
     commands:
       - echo "Logging into Harbor..."
       - podman login $REGISTRY -u admin -p Harbor12345
+      - apk add --no-cache python3 py3-pip git
+      - pip3 install --no-cache-dir podman-compose
 
-      - echo "Starting Podman socket..."
-      - systemctl --user enable --now podman.socket || true
-      - export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
+      - echo "Building images via docker-compose..."
+      - podman-compose -f docker-compose.yml build
 
-      - echo "Building images via podman-compose..."
-      - podman compose -f docker-compose.yml build
-
-      - echo "Pushing images via podman-compose..."
-      - podman compose -f docker-compose.yml push
+      - echo "Tagging and pushing images..."
+      - docker-compose -f docker-compose.yml push
