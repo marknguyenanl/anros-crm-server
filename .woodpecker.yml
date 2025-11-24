@@ -15,4 +15,4 @@ steps:
       - podman-compose -f docker-compose.yml build
 
       - echo "Tagging and pushing images..."
-      - docker-compose -f docker-compose.yml push
+      - podman-compose -f docker-compose.yml push
