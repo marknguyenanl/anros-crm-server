@@ -4,8 +4,9 @@ FROM php:8.4-fpm-alpine
 RUN apk add --no-cache \
     autoconf g++ make oniguruma-dev \
     libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev zip unzip bash git curl \
-    docker-php-ext-install pdo pdo_mysql \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN docker-php-ext-install pdo pdo_mysql
 
 WORKDIR /var/www/html
 
