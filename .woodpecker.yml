@@ -4,7 +4,6 @@ steps:
     privileged: true
     environment:
       REGISTRY: harbor.anrostech.com
-      IMAGE: harbor.anrostech.com/anros/crm-anros-backend:latest
     commands:
       - echo "Logging into Harbor..."
       - podman login $REGISTRY -u admin -p Harbor12345
