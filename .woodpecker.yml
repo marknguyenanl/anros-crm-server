@@ -18,8 +18,8 @@ steps:
       - podman pull $REGISTRY/$IMAGE_BASE-nginx || true
 
       # Build both images in parallel
-      - podman build -f docker/svc/Dockerfile --cache-from $REGISTRY/$IMAGE_BASE-svc --cache-to $REGISTRY/$IMAGE_BASE-svc -t $REGISTRY/$IMAGE_BASE-svc:$IMAGE_TAG docker/svc &
-      - podman build -f docker/nginx/Dockerfile --cache-from $REGISTRY/$IMAGE_BASE-nginx --cache-to $REGISTRY/$IMAGE_BASE-nginx -t $REGISTRY/$IMAGE_BASE-nginx:$IMAGE_TAG docker/nginx &
+      - podman build -f docker/svc/Dockerfile --cache-from $REGISTRY/$IMAGE_BASE-svc --cache-to $REGISTRY/$IMAGE_BASE-svc -t $REGISTRY/$IMAGE_BASE-svc:$IMAGE_TAG . &
+      - podman build -f docker/nginx/Dockerfile --cache-from $REGISTRY/$IMAGE_BASE-nginx --cache-to $REGISTRY/$IMAGE_BASE-nginx -t $REGISTRY/$IMAGE_BASE-nginx:$IMAGE_TAG . &
       - wait
 
       # Push both images in parallel
