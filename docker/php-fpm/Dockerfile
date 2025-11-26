@@ -5,7 +5,7 @@ FROM php:8.4-fpm AS build
 
 # Install system dependencies for PHP extensions and Composer
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libzip-dev zip unzip bash git curl \
+    libzip-dev libonig-dev zip unzip bash git curl \
     && docker-php-ext-install pdo pdo_mysql mbstring zip bcmath \
     && rm -rf /var/lib/apt/lists/*
 
