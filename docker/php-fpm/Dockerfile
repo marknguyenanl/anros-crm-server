@@ -1,6 +1,6 @@
 # Stage 1: Build
 # -------------------------------
-FROM php:8.4-fpm-alpine AS build
+FROM php:8.4-fpm AS build
 
 # Install system dependencies for PHP extensions and composer
 RUN apk add --no-cache \
@@ -32,7 +32,7 @@ RUN chmod +x /entrypoint.sh
 # -------------------------------
 # Stage 2: Production
 # -------------------------------
-FROM php:8.4-fpm-alpine
+FROM php:8.4-fpm
 
 # Set working directory
 WORKDIR /var/www/html
