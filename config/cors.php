@@ -15,12 +15,13 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*'],
+    // 'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
     // 'allowed_origins' => ['crm.anrostech.com', 'anrostech.com'],
-    'allowed_origins' => ['https://crm.anrostech.com', 'https://anrostech.com'],
+    'allowed_origins' => ['https://crm.anrostech.com', 'http://crm.anrostech.com', 'http://anrostech.com', 'https://anrostech.com'],
 
     'allowed_origins_patterns' => [],
 
