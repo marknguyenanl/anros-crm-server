@@ -29,7 +29,7 @@ steps:
       - wait
 
   update_deployment_repo:
-    image: alpine:3.18
+    image: alpine/git
     depends_on:
       - build_image
     environment:
@@ -39,9 +39,8 @@ steps:
       GITEA_REPO: rr
     commands:
       - IMAGE_TAG=${CI_COMMIT_SHA}-${CI_BUILD_NUMBER}
-      - apk add --no-cache git
       # Clone repo
-      - git clone https://$GITEA_OWNER:$GIT_TOKEN@gitea.anrostech.com/mark/rr
+      - git clone https://$GIT_TOKEN@gitea.anrostech.com/mark/rr
       - cd rr
 
       # Git identity
