@@ -10,7 +10,7 @@ steps:
       REGISTRY_PASS:
         from_secret: registry_pass
     commands:
-      - IMAGE_TAG=${CI_COMMIT_SHA}
+      - IMAGE_TAG=${CI_COMMIT_SHA}-${CI_BUILD_NUMBER}
       - echo "Logging into Harbor..."
       - buildah login $REGISTRY -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
 
