@@ -31,12 +31,14 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->guard()->attempt($credentials)) {
+        // explicitly use 'api' guard (JWT)
+        if (! $token = auth()->guard('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         return $this->respondWithToken($token);
     }
+
 
     // get the authenticated user
     public function me(): JsonResponse
