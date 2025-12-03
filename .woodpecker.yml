@@ -13,7 +13,7 @@ steps:
       REGISTRY_PASS:
         from_secret: registry_pass
     commands:
-      - IMAGE_TAG=${CI_PIPELINE_CREATED}
+      - IMAGE_TAG=${CI_COMMIT_BRANCH}-${CI_PIPELINE_CREATED}
       - echo "Logging into Harbor..."
       - buildah login $REGISTRY -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
 
@@ -38,7 +38,7 @@ steps:
       GIT_REPO: rr
       GIT_URL: github.com
     commands:
-      - IMAGE_TAG=${CI_PIPELINE_CREATED}
+      - IMAGE_TAG=${CI_COMMIT_BRANCH}-${CI_PIPELINE_CREATED}
       # Clone repo
       - git clone https://$GIT_TOKEN@$GIT_URL/$GIT_OWNER/$GIT_REPO
       - cd rr
