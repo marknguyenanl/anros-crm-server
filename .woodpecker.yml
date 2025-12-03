@@ -18,8 +18,8 @@ steps:
       - buildah login $REGISTRY -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
 
       - echo "Build both images in parallel"
-      - buildah build -f docker/svc/Dockerfile --cache-from $REGISTRY/$IMAGE_BASE-svc --layers --cache-to $REGISTRY/$IMAGE_BASE-svc -t $REGISTRY/$IMAGE_BASE-svc:$IMAGE_TAG . &
-      - buildah build -f docker/nginx/Dockerfile --cache-from $REGISTRY/$IMAGE_BASE-nginx --layers --cache-to $REGISTRY/$IMAGE_BASE-nginx -t $REGISTRY/$IMAGE_BASE-nginx:$IMAGE_TAG . &
+      - buildah build -f docker/svc/Dockerfile --no-cache -t $REGISTRY/$IMAGE_BASE-svc:$IMAGE_TAG . &
+      - buildah build -f docker/nginx/Dockerfile --no-cache -t $REGISTRY/$IMAGE_BASE-nginx:$IMAGE_TAG . &
       - wait
 
       - echo "Push both images in parallel"

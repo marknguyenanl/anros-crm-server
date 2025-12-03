@@ -15,18 +15,19 @@ class LeadController extends Controller
      */
     public function getLeads(Request $request)
     {
-        // $perPage = $request->get('per_page', 50); // /v1/leads?per_page=20
-        // $leads = Lead::orderBy('created_at', 'desc')->paginate($perPage)
-        $leads = Lead::orderBy('created_at', 'desc')->get();
+        $perPage = $request->get('per_page', 100); // /v1/leads?per_page=20
+        $leads = Lead::orderBy('created_at', 'desc')->paginate($perPage);
+        // $leads = Lead::orderBy('created_at', 'desc')->get();
 
-            // 'meta' => [
-            //     'current_page' => $leads->currentPage(),
-            //     'last_page' => $leads->lastPage(),
-            //     'per_page' => $leads->perpage(),
-            //     'total' => $leads->total()
         return response()->json([
             'success' => true,
-            'data' => $leads
+            'data' => $leads->items(),
+            'meta' => [
+                'current_page' => $leads->currentPage(),
+                'last_page' => $leads->lastPage(),
+                'per_page' => $leads->perPage(),
+                'total' => $leads->total()
+            ]
             ]);
     }
 
