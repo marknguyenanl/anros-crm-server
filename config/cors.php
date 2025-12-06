@@ -17,17 +17,15 @@ return [
 
     'paths' => ['api/*', 'crm/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_origins' => [],
 
-    'allowed_origins' => [
-        'http://localhost:5173',
-        'https://crm.anrostech.com',
-        'https://samio.anrostech.com',
-        'https://www.samiohome.com',
-        'https://crm.samiohome.com',
-        'https://api.samiohome.com',
+    'allowed_origins_patterns' => [
+        // Allow localhost on any port
+        '/^http:\/\/localhost(:[0-9]+)?$/',
+
+        // Allow any subdomain of samiohome.com over http or https
+        '/^https?:\/\/([a-z0-9-]+\.)*anrostech\.com$/i',
     ],
-
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
