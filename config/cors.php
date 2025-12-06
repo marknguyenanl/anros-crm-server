@@ -17,15 +17,9 @@ return [
 
     'paths' => ['api/*', 'crm/*', 'sanctum/csrf-cookie'],
 
-    'allowed_origins' => [],
+    'allowed_origins' => ['*'],
 
-    'allowed_origins_patterns' => [
-        // Allow localhost on any port
-        '/^http:\/\/localhost(:[0-9]+)?$/',
-
-        // Allow any subdomain of samiohome.com over http or https
-        '/^https?:\/\/([a-z0-9-]+\.)*anrostech\.com$/i',
-    ],
+    'allowed_origins_patterns' => [],
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
