@@ -19,7 +19,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
-        $user = new User;
+        $user = new User();
         $user->email = request()->email;
         $user->password = bcrypt(request()->password);
         $user->save();
