@@ -36,7 +36,7 @@ class AuthController extends Controller
         ]);
 
         // explicitly use 'api' guard (JWT)
-        if (! $token = auth()->guard()->attempt($credentials)) {
+        if (! $token = auth()->guard('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -46,13 +46,13 @@ class AuthController extends Controller
     // get the authenticated user
     public function me(): JsonResponse
     {
-        return response()->json(auth()->guard()->user());
+        return response()->json(auth()->guard('api')->user());
     }
 
     // log the user out -- invalidate the token
     public function logout(): JsonResponse
     {
-        auth()->guard()->logout();
+        auth()->guard('api')->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }
@@ -60,7 +60,7 @@ class AuthController extends Controller
     // refresh token
     public function refresh(): JsonResponse
     {
-        return $this->respondWithToken(auth()->guard()->refresh());
+        return $this->respondWithToken(auth()->guard('api')->refresh());
     }
 
     // get the token array structure
@@ -69,7 +69,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->guard()->factory()->getTTL() * 60,
+            'expires_in' => auth()->guard('api')->factory()->getTTL() * 60,
         ]);
     }
 }
